@@ -36,7 +36,10 @@ fail:
 
 int vmaf_close(VmafContext *vmaf)
 {
-    int err = 0;
+    if (!vmaf) return -EINVAL;
+
+    vmaf_feature_collector_destroy(vmaf->feature_collector);
     free(vmaf);
+
     return 0;
 }
