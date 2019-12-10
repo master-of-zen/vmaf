@@ -17,11 +17,6 @@ enum VmafPoolingMethod {
 
 typedef struct {
     double score;
-    struct {
-        struct {
-            double lo, hi;
-        } c95;
-    } ci;
 } VmafScore;
 
 typedef struct VmafContext VmafContext;
