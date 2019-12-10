@@ -21,7 +21,7 @@ typedef struct {
 
 typedef struct VmafContext VmafContext;
 
-int vmaf_default_configuration(VmafConfiguration *cfg);
+void vmaf_default_configuration(VmafConfiguration *cfg);
 
 int vmaf_init(VmafContext **vmaf, VmafConfiguration cfg);
 

@@ -39,7 +39,8 @@ test_feature_extractor = executable('test_feature_extractor',
 )
 
 test_context = executable('test_context',
-    ['test.c', 'test_context.c', '../src/libvmaf.rc.c'],
+    ['test.c', 'test_context.c', '../src/libvmaf.rc.c',
+     '../src/feature/feature_collector.c'],
     include_directories : [libvmaf_inc, test_inc],
 )
 

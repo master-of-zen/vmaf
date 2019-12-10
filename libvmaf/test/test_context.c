@@ -7,8 +7,8 @@ static char *test_context_init_and_close()
     VmafContext *vmaf;
     VmafConfiguration cfg;
 
-    err = vmaf_default_configuration(&cfg);
-    mu_assert("problem during vmaf_default_configuration", !err);
+    vmaf_default_configuration(&cfg);
+
     err = vmaf_init(&vmaf, cfg);
     mu_assert("problem during vmaf_init", !err);
     err = vmaf_close(vmaf);
