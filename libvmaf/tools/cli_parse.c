@@ -7,7 +7,7 @@
 
 #include "cli_parse.h"
 
-static const char short_opts[] = "r:d:";
+static const char short_opts[] = "r:d:m:t:v:";
 
 static const struct option long_opts[] = {
     { "reference",        1, NULL, 'r' },
