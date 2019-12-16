@@ -4,8 +4,13 @@
 #include "libvmaf/model.h"
 #include "libvmaf/picture.h"
 
+enum VmafLogLevel {
+    VMAF_LOG_LEVEL_NONE,
+};
+
 typedef struct {
-    int log_level;
+    enum VmafLogLevel log_level;
+    unsigned n_threads;
 } VmafConfiguration;
 
 enum VmafPoolingMethod {
