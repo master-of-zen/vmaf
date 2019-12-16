@@ -11,7 +11,10 @@ struct VmafContext {
 
 void vmaf_default_configuration(VmafConfiguration *cfg)
 {
+    if (!cfg) return;
+    memset(cfg, 0, sizeof(*cfg));
     cfg->log_level = 0;
+    cfg->n_threads = 1;
 }
 
 int vmaf_init(VmafContext **vmaf, VmafConfiguration cfg)
