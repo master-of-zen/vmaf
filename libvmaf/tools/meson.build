@@ -14,8 +14,8 @@ vmafossexec = executable(
 
 vmaf_rc = executable(
     'vmaf_rc',
-    [src_dir + 'vmaf.c'],
-    include_directories : libvmaf_inc,
+    [src_dir + 'vmaf.c', src_dir + 'cli_parse.c'],
+    include_directories : [libvmaf_inc, vmaf_include],
     c_args : vmaf_cflags_common,
     cpp_args : vmaf_cflags_common,
     link_with : libvmaf_rc,
