@@ -34,13 +34,16 @@ int vmaf_use_features_from_model(VmafContext *vmaf, VmafModel model);
 
 int vmaf_use_feature(VmafContext *vmaf, const char *feature_name);
 
+int vmaf_import_feature_score(VmafContext *vmaf, char *feature_name,
+                              double value, unsigned index);
+
 int vmaf_read_pictures(VmafContext *vmaf, VmafPicture *ref, VmafPicture *dist);
 
 int vmaf_score_single(VmafContext *vmaf, VmafModel model, VmafScore *score,
                       unsigned index);
 
 int vmaf_score_pooled(VmafContext *vmaf, VmafModel model,
-                      enum VmafPoolingMethod, VmafScore *score);
+                      enum VmafPoolingMethod pool_method, VmafScore *score);
 
 int vmaf_close(VmafContext *vmaf);
 

@@ -3,6 +3,7 @@
 
 #include "feature/feature_collector.h"
 #include "libvmaf/libvmaf.rc.h"
+#include "model.h"
 
 struct VmafContext {
     VmafConfiguration cfg;
@@ -47,6 +48,15 @@ int vmaf_close(VmafContext *vmaf)
     return 0;
 }
 
+int vmaf_import_feature_score(VmafContext *vmaf, char *feature_name,
+                              double value, unsigned index)
+{
+    if (!vmaf) return -EINVAL;
+    if (!feature_name) return -EINVAL;
+    return vmaf_feature_collector_append(vmaf->feature_collector, feature_name,
+                                         value, index);
+}
+
 int vmaf_use_features_from_model(VmafContext *vmaf, VmafModel model)
 {
     return 0;
@@ -69,7 +79,7 @@ int vmaf_score_single(VmafContext *vmaf, VmafModel model, VmafScore *score,
 }
 
 int vmaf_score_pooled(VmafContext *vmaf, VmafModel model,
-                      enum VmafPoolingMethod, VmafScore *score)
+                      enum VmafPoolingMethod pool_method, VmafScore *score)
 {
     return 0;
 }
