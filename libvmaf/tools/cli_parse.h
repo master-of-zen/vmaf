@@ -3,11 +3,16 @@
 
 #include "libvmaf/libvmaf.rc.h"
 
+#define CLI_SETTINGS_ARRAY_LEN 256
+
 typedef struct {
     char *y4m_path_ref, *y4m_path_dist;
-    char *model_path;
+    char *model_path[CLI_SETTINGS_ARRAY_LEN];
+    unsigned model_cnt;
+    char *feature[CLI_SETTINGS_ARRAY_LEN];
+    unsigned feature_cnt;
     enum VmafLogLevel log_level;
-    unsigned n_threads;
+    unsigned thread_cnt;
 } CLISettings;
 
 void cli_parse(const int argc, char *const *const argv,

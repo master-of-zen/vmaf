@@ -7,13 +7,14 @@
 
 #include "cli_parse.h"
 
-static const char short_opts[] = "r:d:m:t:v:";
+static const char short_opts[] = "r:d:m:t:f:v:";
 
 static const struct option long_opts[] = {
     { "reference",        1, NULL, 'r' },
     { "distorted",        1, NULL, 'd' },
     { "model",            1, NULL, 'm' },
     { "threads",          1, NULL, 't' },
+    { "feature",          1, NULL, 'f' },
     { "version",          0, NULL, 'v' },
     { NULL,               0, NULL, 0 },
 };
@@ -31,7 +32,8 @@ static void usage(const char *const app, const char *const reason, ...) {
             " --reference/-r $string:    path to reference .y4m\n"
             " --distorted/-d $string:    path to distorted .y4m\n"
             " --model/-m $model:         path to model file\n"
-            " --threads/-t $unsigned:    number of feature extractor threads\n"
+            " --threads/-t $unsigned:    number of threads to use\n"
+            " --feature/-f $string:      extra feature extractor\n"
             " --version/-v:              print version and exit\n"
            );
     exit(1);
@@ -81,10 +83,21 @@ void cli_parse(const int argc, char *const *const argv,
             settings->y4m_path_dist = optarg;
             break;
         case 'm':
-            settings->model_path = optarg;
+            if (settings->model_cnt == CLI_SETTINGS_ARRAY_LEN) {
+                usage(argv[0], "A maximum of %d models is supported\n",
+                      CLI_SETTINGS_ARRAY_LEN);
+            }
+            settings->model_path[settings->model_cnt++] = optarg;
+            break;
+        case 'f':
+            if (settings->feature_cnt == CLI_SETTINGS_ARRAY_LEN) {
+                usage(argv[0], "A maximum of %d features is supported\n",
+                      CLI_SETTINGS_ARRAY_LEN);
+            }
+            settings->feature[settings->feature_cnt++] = optarg;
             break;
         case 't':
-            settings->n_threads = parse_unsigned(optarg, 't', argv[0]);
+            settings->thread_cnt = parse_unsigned(optarg, 't', argv[0]);
             break;
         default:
             break;
@@ -95,6 +108,6 @@ void cli_parse(const int argc, char *const *const argv,
         usage(argv[0], "Reference .y4m (-r/--reference) is required");
     if (!settings->y4m_path_ref)
         usage(argv[0], "Distorted .y4m (-d/--distorted) is required");
-    if (!settings->model_path)
-        usage(argv[0], "Model file (-m/--model) is required");
+    if (settings->model_cnt == 0)
+        usage(argv[0], "At least one model file (-m/--model) is required");
 }
