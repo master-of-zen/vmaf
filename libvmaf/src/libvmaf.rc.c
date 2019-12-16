@@ -46,3 +46,30 @@ int vmaf_close(VmafContext *vmaf)
 
     return 0;
 }
+
+int vmaf_use_features_from_model(VmafContext *vmaf, VmafModel model)
+{
+    return 0;
+}
+
+int vmaf_use_feature(VmafContext *vmaf, const char *feature_name)
+{
+    return 0;
+}
+
+int vmaf_read_pictures(VmafContext *vmaf, VmafPicture *ref, VmafPicture *dist)
+{
+    return 0;
+}
+
+int vmaf_score_single(VmafContext *vmaf, VmafModel model, VmafScore *score,
+                      unsigned index)
+{
+    return 0;
+}
+
+int vmaf_score_pooled(VmafContext *vmaf, VmafModel model,
+                      enum VmafPoolingMethod, VmafScore *score)
+{
+    return 0;
+}
