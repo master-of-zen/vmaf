@@ -165,6 +165,14 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    for (unsigned i = 0; i < c.feature_cnt; i++) {
+        err = vmaf_use_feature(vmaf, c.feature[i]);
+        if (err) {
+            fprintf(stderr, "feature does not exist: %s\n", c.feature[i]);
+            return -1;
+        }
+    }
+
     VmafPicture pic_ref, pic_dist;
     fetch_picture(&vid_ref, &pic_ref);
     fetch_picture(&vid_dist, &pic_dist);
