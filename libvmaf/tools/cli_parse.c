@@ -33,7 +33,7 @@ static void usage(const char *const app, const char *const reason, ...) {
             " --distorted/-d $string:    path to distorted .y4m\n"
             " --model/-m $model:         path to model file\n"
             " --threads/-t $unsigned:    number of threads to use\n"
-            " --feature/-f $string:      extra feature extractor\n"
+            " --feature/-f $string:      additional feature\n"
             " --version/-v:              print version and exit\n"
            );
     exit(1);
