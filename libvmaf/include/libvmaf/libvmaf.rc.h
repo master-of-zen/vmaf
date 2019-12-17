@@ -33,7 +33,7 @@ void vmaf_default_configuration(VmafConfiguration *cfg);
  *
  * @param vmaf The VMAF instance to open.
  *             To be used in further libvmaf api calls.
- *             *vmaf will be set to the allocated context.
+ *             $vmaf will be set to the allocated context.
  *             Context should be cleaned up with `vmaf_close()` when finished.
  *
  * @param cfg  Configuration parameters.
@@ -95,10 +95,9 @@ int vmaf_import_feature_score(VmafContext *vmaf, char *feature_name,
                               double value, unsigned index);
 
 /**
- * Read a pair of pictures.
- * This should always be called after feature etractors are registered via
+ * Read a pair of pictures and queue them for eventual feature extraction.
+ * This should always be called after feature extractors are registered via
  * `vmaf_use_features_from_model()` and/or `vmaf_use_feature()`.
- * This call queues the pair of pictures for eventual feature extraction.
  *
  * @param vmaf  The VMAF context allocated with `vmaf_init()`.
  *
