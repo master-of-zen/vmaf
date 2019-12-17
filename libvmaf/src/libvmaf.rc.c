@@ -1,21 +1,66 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include "feature/feature_extractor.h"
 #include "feature/feature_collector.h"
 #include "libvmaf/libvmaf.rc.h"
 #include "model.h"
 
-struct VmafContext {
+typedef struct {
+    VmafFeatureCollector **fex;
+    unsigned cnt, capacity;
+} FeatureExtractorVector;
+
+typedef struct VmafContext {
     VmafConfiguration cfg;
     VmafFeatureCollector *feature_collector;
-};
+    FeatureExtractorVector registered_feature_extractors;
+} VmafContext;
+
+static int feature_extractor_vector_init(FeatureExtractorVector *fev)
+{
+    fev->cnt = 0;
+    fev->capacity = 8;
+    size_t sz = sizeof(*(fev->fex)) * fev->capacity;
+    fev->fex = malloc(sz);
+    if (!fev->fex) return -ENOMEM;
+    memset(fev->fex, 0, sz);
+    return 0;
+}
+
+static int feature_extractor_vector_append(FeatureExtractorVector *fev,
+                                           VmafFeatureExtractor *fex)
+{
+    if (!fev) return -EINVAL;
+    if (!fex) return -EINVAL;
+
+    if (fev->cnt >= fev->capacity) {
+        size_t capacity = fev->capacity * 2;
+        VmafFeatureExtractor **fex =
+            realloc(fev->fex, sizeof(*(fev->fex)) * capacity);
+        if (!fex) return -ENOMEM;
+        fev->fex = fex;
+        fev->capacity = capacity;
+        for (int i = fev->cnt; i < fev->capacity; i++)
+            fev->fex[i] = NULL;
+    }
+
+    fev->fex[fev->cnt++] = fex;
+    return 0;
+}
+
+static void feature_extractor_vector_destroy(FeatureExtractorVector *fev)
+{
+    if (!fev) return;
+    if (!fev->fex) return;
+    free(fev->fex);
+    return;
+}
 
 void vmaf_default_configuration(VmafConfiguration *cfg)
 {
     if (!cfg) return;
     memset(cfg, 0, sizeof(*cfg));
-    cfg->log_level = 0;
-    cfg->n_threads = 1;
 }
 
 int vmaf_init(VmafContext **vmaf, VmafConfiguration cfg)
@@ -29,9 +74,13 @@ int vmaf_init(VmafContext **vmaf, VmafConfiguration cfg)
     v->cfg = cfg;
     err = vmaf_feature_collector_init(&(v->feature_collector));
     if (err) goto free_v;
+    err = feature_extractor_vector_init(&(v->registered_feature_extractors));
+    if (err) goto free_feature_collector;
 
     return 0;
 
+free_feature_collector:
+    vmaf_feature_collector_destroy(v->feature_collector);
 free_v:
     free(v);
 fail:
@@ -42,6 +91,7 @@ int vmaf_close(VmafContext *vmaf)
 {
     if (!vmaf) return -EINVAL;
 
+    feature_extractor_vector_destroy(&(vmaf->registered_feature_extractors));
     vmaf_feature_collector_destroy(vmaf->feature_collector);
     free(vmaf);
 
