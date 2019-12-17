@@ -7,7 +7,7 @@
 
 #include "cli_parse.h"
 
-static const char short_opts[] = "r:d:m:l:t:f:v:";
+static const char short_opts[] = "r:d:m:l:t:f:i:v:";
 
 static const struct option long_opts[] = {
     { "reference",        1, NULL, 'r' },
@@ -16,6 +16,7 @@ static const struct option long_opts[] = {
     { "log",              0, NULL, 'l' },
     { "threads",          1, NULL, 't' },
     { "feature",          1, NULL, 'f' },
+    { "import",           1, NULL, 'i' },
     { "version",          0, NULL, 'v' },
     { NULL,               0, NULL, 0 },
 };
@@ -33,9 +34,10 @@ static void usage(const char *const app, const char *const reason, ...) {
             " --reference/-r $path:      path to reference .y4m\n"
             " --distorted/-d $path:      path to distorted .y4m\n"
             " --model/-m $path:          path to model file\n"
-            " --log/-l $path:            path to log file\n"
+            " --log/-l $path:            path to output log file\n"
             " --threads/-t $unsigned:    number of threads to use\n"
             " --feature/-f $string:      additional feature\n"
+            " --import/-i $path:         path to precomputed feature log\n"
             " --version/-v:              print version and exit\n"
            );
     exit(1);
@@ -100,6 +102,13 @@ void cli_parse(const int argc, char *const *const argv,
                       CLI_SETTINGS_ARRAY_LEN);
             }
             settings->feature[settings->feature_cnt++] = optarg;
+            break;
+        case 'i':
+            if (settings->import_cnt == CLI_SETTINGS_ARRAY_LEN) {
+                usage(argv[0], "A maximum of %d imports is supported\n",
+                      CLI_SETTINGS_ARRAY_LEN);
+            }
+            settings->import_path[settings->import_cnt++] = optarg;
             break;
         case 't':
             settings->thread_cnt = parse_unsigned(optarg, 't', argv[0]);

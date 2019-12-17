@@ -12,6 +12,8 @@ typedef struct {
     unsigned model_cnt;
     char *feature[CLI_SETTINGS_ARRAY_LEN];
     unsigned feature_cnt;
+    char *import_path[CLI_SETTINGS_ARRAY_LEN];
+    unsigned import_cnt;
     enum VmafLogLevel log_level;
     unsigned thread_cnt;
 } CLISettings;
