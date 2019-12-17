@@ -39,8 +39,8 @@ int vmaf_import_feature_score(VmafContext *vmaf, char *feature_name,
 
 int vmaf_read_pictures(VmafContext *vmaf, VmafPicture *ref, VmafPicture *dist);
 
-int vmaf_score_single(VmafContext *vmaf, VmafModel model, VmafScore *score,
-                      unsigned index);
+int vmaf_score_at_index(VmafContext *vmaf, VmafModel model, VmafScore *score,
+                        unsigned index);
 
 int vmaf_score_pooled(VmafContext *vmaf, VmafModel model,
                       enum VmafPoolingMethod pool_method, VmafScore *score);

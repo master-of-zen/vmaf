@@ -122,8 +122,8 @@ int vmaf_read_pictures(VmafContext *vmaf, VmafPicture *ref, VmafPicture *dist)
     return 0;
 }
 
-int vmaf_score_single(VmafContext *vmaf, VmafModel model, VmafScore *score,
-                      unsigned index)
+int vmaf_score_at_index(VmafContext *vmaf, VmafModel model, VmafScore *score,
+                        unsigned index)
 {
     return 0;
 }
