@@ -7,6 +7,7 @@
 
 typedef struct {
     char *y4m_path_ref, *y4m_path_dist;
+    char *log_path;
     char *model_path[CLI_SETTINGS_ARRAY_LEN];
     unsigned model_cnt;
     char *feature[CLI_SETTINGS_ARRAY_LEN];

@@ -7,12 +7,13 @@
 
 #include "cli_parse.h"
 
-static const char short_opts[] = "r:d:m:t:f:v:";
+static const char short_opts[] = "r:d:m:l:t:f:v:";
 
 static const struct option long_opts[] = {
     { "reference",        1, NULL, 'r' },
     { "distorted",        1, NULL, 'd' },
     { "model",            1, NULL, 'm' },
+    { "log",              0, NULL, 'l' },
     { "threads",          1, NULL, 't' },
     { "feature",          1, NULL, 'f' },
     { "version",          0, NULL, 'v' },
@@ -29,9 +30,10 @@ static void usage(const char *const app, const char *const reason, ...) {
     }
     fprintf(stderr, "Usage: %s [options]\n\n", app);
     fprintf(stderr, "Supported options:\n"
-            " --reference/-r $string:    path to reference .y4m\n"
-            " --distorted/-d $string:    path to distorted .y4m\n"
-            " --model/-m $model:         path to model file\n"
+            " --reference/-r $path:      path to reference .y4m\n"
+            " --distorted/-d $path:      path to distorted .y4m\n"
+            " --model/-m $path:          path to model file\n"
+            " --log/-l $path:            path to log file\n"
             " --threads/-t $unsigned:    number of threads to use\n"
             " --feature/-f $string:      additional feature\n"
             " --version/-v:              print version and exit\n"
@@ -81,6 +83,9 @@ void cli_parse(const int argc, char *const *const argv,
             break;
         case 'd':
             settings->y4m_path_dist = optarg;
+            break;
+        case 'l':
+            settings->log_path = optarg;
             break;
         case 'm':
             if (settings->model_cnt == CLI_SETTINGS_ARRAY_LEN) {
