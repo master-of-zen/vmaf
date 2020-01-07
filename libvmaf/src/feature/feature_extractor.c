@@ -2,7 +2,12 @@
 
 #include "feature_extractor.h"
 
+extern VmafFeatureExtractor psnr;
+extern VmafFeatureExtractor ssim;
+
 static VmafFeatureExtractor *feature_extractor_list[] = {
+    &psnr,
+    &ssim,
     NULL
 };
 
@@ -24,11 +29,13 @@ VmafFeatureExtractor *get_feature_extractor_by_feature_name(char *feature_name)
 
     VmafFeatureExtractor *fex = NULL;
     for (unsigned i = 0; (fex = feature_extractor_list[i]); i++) {
+        /*
         const char *fname = NULL;
         for (unsigned j = 0; (fname = fex->feature[j]); j++) {
             if (!strcmp(feature_name, fname))
                 return fex;
         }
+        */
     }
     return NULL;
 }

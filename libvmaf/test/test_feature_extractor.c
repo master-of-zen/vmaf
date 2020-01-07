@@ -7,11 +7,14 @@
 
 static char *test_get_feature_extractor_by_name_and_feature_name()
 {
-    VmafFeatureExtractor *fex = NULL;
-    fex = get_feature_extractor_by_name("");
-    mu_assert("problem during vmaf_picture_unref", !fex);
-    fex = get_feature_extractor_by_feature_name("");
-    mu_assert("problem during vmaf_picture_unref", !fex);
+    VmafFeatureExtractor *fex1, *fex2 = NULL;
+    fex1 = get_feature_extractor_by_name("psnr");
+    mu_assert("problem during get_feature_extractor_by_name", fex1);
+    fex2 = get_feature_extractor_by_name("psnr");
+    mu_assert("problem during get_feature_extractor_by_name", fex2);
+    //mu_assert("fex1 and fex2 should not be duplicates", fex1 != fex2);
+    fex1 = get_feature_extractor_by_feature_name("");
+    mu_assert("problem during get_feature_extractor_by_feature_name", !fex1);
 
     return NULL;
 }

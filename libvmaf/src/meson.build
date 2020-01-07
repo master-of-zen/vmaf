@@ -137,7 +137,11 @@ libvmaf_rc_sources = [
     src_dir + 'svm.cpp',
     src_dir + 'picture.c',
     src_dir + 'mem.c',
+    src_dir + 'picture.c',
     feature_src_dir + 'feature_collector.c',
+    feature_src_dir + 'feature_extractor.c',
+    feature_src_dir + 'integer_psnr.c',
+    feature_src_dir + 'integer_ssim.c',
 ]
 
 libvmaf_rc_include = include_directories(

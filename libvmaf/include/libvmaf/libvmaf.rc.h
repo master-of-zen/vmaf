@@ -1,6 +1,8 @@
 #ifndef __VMAF_H__
 #define __VMAF_H__
 
+#include <stdio.h>
+
 #include "libvmaf/model.h"
 #include "libvmaf/picture.h"
 
@@ -27,6 +29,12 @@ typedef struct {
 typedef struct VmafContext VmafContext;
 
 void vmaf_default_configuration(VmafConfiguration *cfg);
+void vmaf_write_log(VmafContext *vmaf, FILE *log);
+
+/**
+ * Get libvmaf version.
+ */
+const char *vmaf_version(void);
 
 /**
  * Allocate and open a VMAF instance.
@@ -56,7 +64,7 @@ int vmaf_init(VmafContext **vmaf, VmafConfiguration cfg);
  *
  * @return 0 on success, or < 0 (a negative errno code) on error.
  */
-int vmaf_use_features_from_model(VmafContext *vmaf, VmafModel model);
+int vmaf_use_features_from_model(VmafContext *vmaf, VmafModel *model);
 
 /**
  * Register specific feature extractor.
@@ -105,10 +113,12 @@ int vmaf_import_feature_score(VmafContext *vmaf, char *feature_name,
  *
  * @param dist  Distorted picture.
  *
+ * @param index  Picture index.
  *
  * @return 0 on success, or < 0 (a negative errno code) on error.
  */
-int vmaf_read_pictures(VmafContext *vmaf, VmafPicture *ref, VmafPicture *dist);
+int vmaf_read_pictures(VmafContext *vmaf, VmafPicture *ref, VmafPicture *dist,
+                       unsigned index);
 
 /**
  * Predict VMAF score at specific index.
@@ -128,7 +138,7 @@ int vmaf_score_at_index(VmafContext *vmaf, VmafModel model, VmafScore *score,
                         unsigned index);
 
 /**
- * Predict temporal VMAF score.
+ * Predict pooled VMAF score for a specific interval.
  *
  * @param vmaf         The VMAF context allocated with `vmaf_init()`.
  *
@@ -138,11 +148,15 @@ int vmaf_score_at_index(VmafContext *vmaf, VmafModel model, VmafScore *score,
  *
  * @param score        Predicted score.
  *
+ * @param index_low    Low picture index of pooling interval.
+ *
+ * @param index_high   High picture index of pooling interval.
  *
  * @return 0 on success, or < 0 (a negative errno code) on error.
  */
 int vmaf_score_pooled(VmafContext *vmaf, VmafModel model,
-                      enum VmafPoolingMethod pool_method, VmafScore *score);
+                      enum VmafPoolingMethod pool_method, VmafScore *score,
+                      unsigned index_low, unsigned index_high);
 
 /**
  * Close a VMAF instance and free all associated memory.
