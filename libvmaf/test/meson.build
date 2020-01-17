@@ -39,6 +39,12 @@ test_feature_extractor = executable('test_feature_extractor',
      '../src/feature/integer_ssim.c',
      '../src/mem.c',
      '../src/feature/picture_copy.c',
+     '../src/feature/float_motion.c',
+     '../src/feature/motion.c',
+     '../src/feature/common/convolution.c',
+     '../src/feature/common/cpu.c',
+     '../src/feature/offset.c',
+     '../src/feature/common/alignment.c',
      '../src/feature/float_ssim.c',
      '../src/feature/iqa/math_utils.c',
      '../src/feature/iqa/convolve.c',
@@ -47,10 +53,12 @@ test_feature_extractor = executable('test_feature_extractor',
      '../src/feature/ssim.c',
      '../src/feature/integer_psnr.c',
      '../src/feature/float_psnr.c',
-     '../src/feature/psnr.c',
-     '../src/feature/psnr_tools.c'],
+     '../src/feature/psnr.c',],
     include_directories : [libvmaf_inc, test_inc, '../src/'],
     dependencies : math_lib,
+    objects : [
+      convolution_and_psnr_avx_static_lib.extract_all_objects(),
+    ]
 )
 
 test('test_picture', test_picture)
