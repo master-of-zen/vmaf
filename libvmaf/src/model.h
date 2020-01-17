@@ -23,6 +23,7 @@ typedef struct {
 
 typedef struct VmafModel {
     char *path;
+    char *name;
     enum VmafModelType type;
     VmafModelFeature *feature;
     unsigned n_features;

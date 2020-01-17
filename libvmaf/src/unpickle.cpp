@@ -1,5 +1,7 @@
 #include <errno.h>
 
+#include "libvmaf/model.h"
+
 #include "chooseser.h"
 #include "model.h"
 
@@ -8,7 +10,7 @@
 #define VAL_IS_NONE(V) ((V).tag=='Z') /* check ocval.cc */
 #define VAL_IS_DICT(V) ((V).tag=='t') /* check ocval.cc */
 
-static int unpickle(VmafModel *model, const char *pickle_path)
+static int unpickle(VmafModel *model, const char *pickle_path, int flag)
 {
     Val pickle_model;
     LoadValFromFile(pickle_path, pickle_model, SERIALIZE_P0);
@@ -22,7 +24,7 @@ static int unpickle(VmafModel *model, const char *pickle_path)
 
     if (!((VAL_IS_NONE(score_clip)) || VAL_IS_LIST(score_clip)))
         return -EINVAL;
-    model->score_clip.enabled = !(VAL_IS_NONE(score_clip));
+    model->score_clip.enabled = !(VAL_IS_NONE(score_clip)) && (flag & VMAF_MODEL_ENABLE_CLIP);
     if (model->score_clip.enabled) {
         model->score_clip.min = score_clip[0];
         model->score_clip.max = score_clip[1];
@@ -46,7 +48,7 @@ static int unpickle(VmafModel *model, const char *pickle_path)
 
     if (!(VAL_IS_NONE(score_transform) || VAL_IS_DICT(score_transform)))
         return -EINVAL;
-    if (VAL_IS_NONE(score_transform)) {
+    if (VAL_IS_NONE(score_transform) || !(flag & VMAF_MODEL_ENABLE_TRANSFORM)) {
         model->score_transform.enabled = false;
     } else {
         model->score_transform.enabled = true;
@@ -110,9 +112,9 @@ fail:
 
 extern "C" {
 
-int vmaf_unpickle_model(VmafModel *model, const char *pickle_path)
+int vmaf_unpickle_model(VmafModel *model, const char *pickle_path, int flag)
 {
-    return unpickle(model, pickle_path);
+    return unpickle(model, pickle_path, flag);
 }
 
 }

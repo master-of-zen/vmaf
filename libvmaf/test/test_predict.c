@@ -12,7 +12,7 @@ static char *test_predict_score_at_index()
     mu_assert("problem during vmaf_feature_collector_init", !err);
 
     VmafModel *model;
-    err = vmaf_model_load_from_path(&model, "../../model/vmaf_v0.6.1.pkl");
+    err = vmaf_model_load_from_path(&model, "../../model/vmaf_v0.6.1.pkl", "vmaf", 0);
     mu_assert("problem during vmaf_model_load_from_path", !err);
 
     for (unsigned i = 0; i < model->n_features; i++) {

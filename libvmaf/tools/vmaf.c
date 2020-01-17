@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 
     VmafModel *model[c.model_cnt];
     for (unsigned i = 0; i < c.model_cnt; i++) {
-        err = vmaf_model_load_from_path(&model[i], c.model_path[i]);
+        err = vmaf_model_load_from_path(&model[i], c.model_path[i], c.model_name[i], c.model_flag[i]);
         if (err) {
             fprintf(stderr, "problem loading model file: %s\n",
                     c.model_path[i]);

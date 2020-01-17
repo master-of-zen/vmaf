@@ -1,12 +1,15 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+
+#include <libvmaf/libvmaf.rc.h>
 
 #include "model.h"
 #include "svm.h"
 #include "unpickle.h"
 
-int vmaf_model_load_from_path(VmafModel **model, const char *path)
+int vmaf_model_load_from_path(VmafModel **model, const char *path, const char *name, int flag)
 {
     VmafModel *const m = *model = malloc(sizeof(*m));
     if (!m) goto fail;
@@ -14,6 +17,9 @@ int vmaf_model_load_from_path(VmafModel **model, const char *path)
     m->path = malloc(strlen(path) + 1);
     if (!m->path) goto free_m;
     strcpy(m->path, path);
+    m->name = malloc(strlen(name) + 1);
+    if (!m->name) goto free_m;
+    strcpy(m->name, name);
 
     // ugly, this shouldn't be implict (but it is)
     char *svm_path_suffix = ".model";
@@ -28,9 +34,8 @@ int vmaf_model_load_from_path(VmafModel **model, const char *path)
     m->svm = svm_load_model(svm_path);
     free(svm_path);
     if (!m->svm) goto free_path;
-    int err = vmaf_unpickle_model(m, m->path);
+    int err = vmaf_unpickle_model(m, m->path, flag);
     if (err) goto free_svm;
-
     return 0;
 
 free_svm:

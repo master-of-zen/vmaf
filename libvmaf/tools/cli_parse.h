@@ -12,6 +12,8 @@ typedef struct {
     char *output_path;
     enum VmafOutputFormat output_fmt;
     char *model_path[CLI_SETTINGS_STATIC_ARRAY_LEN];
+    char *model_name[CLI_SETTINGS_STATIC_ARRAY_LEN];
+    unsigned int model_flag[CLI_SETTINGS_STATIC_ARRAY_LEN];
     unsigned model_cnt;
     char *feature[CLI_SETTINGS_STATIC_ARRAY_LEN];
     unsigned feature_cnt;

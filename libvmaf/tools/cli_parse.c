@@ -8,6 +8,7 @@
 #include "cli_parse.h"
 
 #include <libvmaf/libvmaf.rc.h>
+#include <libvmaf/model.h>
 
 static const char short_opts[] = "r:d:m:o:x:t:f:i:n:v:";
 
@@ -103,7 +104,45 @@ void cli_parse(const int argc, char *const *const argv,
                 usage(argv[0], "A maximum of %d models is supported\n",
                       CLI_SETTINGS_STATIC_ARRAY_LEN);
             }
-            settings->model_path[settings->model_cnt++] = optarg;
+            /* parse model-specific flags and assign to settings */
+            char *token;
+            char delim[] = "=:";
+            token = strtok(optarg, delim);
+            bool path_set = false;
+            bool name_set = false;
+            /* default model flag is to disable everything and enable on demand*/
+            settings->model_flag[settings->model_cnt] = VMAF_MODEL_ENABLE_NONE;
+            while (token != 0) {
+                if(!strcmp(token, "path")) {
+                    path_set = true;
+                    settings->model_path[settings->model_cnt] = strtok(0, delim);
+                } else if (!strcmp(token, "name")) {
+                    name_set = true;
+                    settings->model_name[settings->model_cnt] = strtok(0, delim);
+                } else if (!strcmp(token, "enable_clip")) {
+                    settings->model_flag[settings->model_cnt] |= VMAF_MODEL_ENABLE_CLIP;
+                } else if (!strcmp(token, "enable_transform")) {
+                    settings->model_flag[settings->model_cnt] |= VMAF_MODEL_ENABLE_TRANSFORM;
+                } else if (!strcmp(token, "enable_ci")) {
+                    settings->model_flag[settings->model_cnt] |= VMAF_MODEL_ENABLE_CONFIDENCE_INTERVAL;
+                } else {
+                    usage(argv[0], "Unknown parameter %s for model.\n", token);
+                }
+                token = strtok(0, delim);
+            }
+            /* if model name is not set, create a unique id for this model */
+            if (!name_set) {
+                size_t buf_size = strlen("custom_vmaf_") + 1 * sizeof(unsigned int) + 1 * sizeof(char);
+                char buf[buf_size];
+                snprintf(buf, buf_size, "custom_vmaf_%u", settings->model_cnt);
+                settings->model_name[settings->model_cnt] = buf;
+            }
+            /* path always needs to be set for each model specified */
+            if (!path_set) {
+                usage(argv[0], "For every model, path needs to be set.\n");
+            }
+            /* increment model count */
+            settings->model_cnt++;
             break;
         case 'f':
             if (settings->feature_cnt == CLI_SETTINGS_STATIC_ARRAY_LEN) {

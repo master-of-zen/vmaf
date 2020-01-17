@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+#include <stdio.h>
 #include "test.h"
 #include "model.c"
 
@@ -8,8 +8,11 @@ static char *test_model_load_and_destroy()
     int err;
 
     VmafModel *model;
-    err = vmaf_model_load_from_path(&model, "../../model/vmaf_v0.6.1.pkl");
+    err = vmaf_model_load_from_path(&model, "../../model/vmaf_v0.6.1.pkl", "some_vmaf", 4);
     mu_assert("problem during vmaf_model_load_from_path", !err);
+    mu_assert("Model name is inconsistent.\n", !strcmp(model->name, "some_vmaf"));
+    mu_assert("Score transform must be enabled.\n", model->score_transform.enabled);
+    mu_assert("Feature 0 name must be VMAF_feature_adm2_score.\n", !strcmp(model->feature[0].name, "'VMAF_feature_adm2_score'"));
 
     /*
     for (unsigned i = 0; i < model->n_features; i++)
